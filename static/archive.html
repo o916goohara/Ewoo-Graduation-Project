@@ -74,11 +74,15 @@
 
     <!-- ── Sticky top nav (source: TopNav) ─────────────────────────── -->
     <nav class="sticky top-0 z-50 flex items-stretch bg-[#F7F7F4] border-b border-[#D4D1CB]" style="font-family:var(--font-sans);">
-      <!-- Logo mark -->
-      <div class="px-8 py-4 border-r border-[#D4D1CB] flex items-center gap-3 shrink-0">
-        <span class="text-[10px] uppercase tracking-[0.25em] text-[#8A8A8A]">EWOO</span>
-        <span class="text-[10px] text-[#D4D1CB]">22nd</span>
-      </div>
+      <!-- Logo mark: click to return to the cover (first page) -->
+      <button
+        id="logo-home-button"
+        type="button"
+        class="group px-8 py-4 border-r border-[#D4D1CB] flex items-center gap-3 shrink-0 cursor-pointer"
+      >
+        <span class="text-[10px] uppercase tracking-[0.25em] text-[#8A8A8A] transition-colors group-hover:text-[#3A7AFE]">EWOO</span>
+        <span class="text-[10px] text-[#D4D1CB] transition-colors group-hover:text-[#3A7AFE]">22nd</span>
+      </button>
 
       <!-- 학년별 기록 -->
       <div class="relative nav-item">
