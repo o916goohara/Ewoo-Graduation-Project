@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { db } from "./firebase";
+import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 
 // ─── Photo placeholder component ─────────────────────────────────────────────
 function PhotoSlot({
@@ -180,9 +182,11 @@ function PageNum({ n }: { n: string }) {
 
 // ─── Guest Book ───────────────────────────────────────────────────────────────
 type GuestEntry = {
-  id: number;
+  id: string | number;
   name: string;
   message: string;
+  drawing?: string;
+  createdAt?: number;
 };
 
 function GuestBook() {
@@ -190,21 +194,43 @@ function GuestBook() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
-  const [entries, setEntries] = useState<GuestEntry[]>([
-    { id: 1, name: "선생님", message: "3년 동안 정말 잘 해줬어요. 행복하세요 ♡" },
-    { id: 2, name: "김지우", message: "같이 웃었던 모든 순간들이 그리울 것 같아." },
-  ]);
+  const [entries, setEntries] = useState<GuestEntry[]>([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const q = query(collection(db, "guestbook"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        const list: GuestEntry[] = snap.docs.map((d) => ({
+          id: d.id,
+          ...(d.data() as Omit<GuestEntry, "id">),
+        }));
+        setEntries(list);
+      } catch (err) {
+        console.error("불러오기 실패:", err);
+      }
+    };
+    load();
+  }, []);
   const lastPos = useRef<{ x: number; y: number } | null>(null);
 
   const getPos = (e: React.MouseEvent | React.TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    let clientX: number;
+    let clientY: number;
     if ("touches" in e) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
-      };
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
     }
-    return { x: (e as React.MouseEvent).clientX - rect.left, y: (e as React.MouseEvent).clientY - rect.top };
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    };
   };
 
   const startDraw = (e: React.MouseEvent | React.TouchEvent) => {
@@ -242,15 +268,48 @@ function GuestBook() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  const submit = () => {
-    if (!name.trim() && !message.trim()) return;
-    setEntries((prev) => [
-      ...prev,
-      { id: Date.now(), name: name.trim() || "익명", message: message.trim() },
-    ]);
-    setName("");
-    setMessage("");
-    clearCanvas();
+
+  const isAdmin =
+    new URLSearchParams(window.location.search).get("admin") === "diesukk2i";
+
+  const removeEntry = async (id: string | number) => {
+    if (!isAdmin) return;
+    if (!confirm("이 방명록을 삭제할까요?")) return;
+    try {
+      await deleteDoc(doc(db, "guestbook", String(id)));
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제에 실패했어요.");
+    }
+  };
+  const submit = async () => {
+    const canvas = canvasRef.current;
+    const drawing = canvas ? canvas.toDataURL("image/png") : "";
+    const blank = canvas ? (() => {
+      const c = document.createElement("canvas");
+      c.width = canvas.width;
+      c.height = canvas.height;
+      return c.toDataURL("image/png");
+    })() : "";
+    const hasDrawing = drawing !== "" && drawing !== blank;
+    if (!name.trim() && !message.trim() && !hasDrawing) return;
+    const newEntry = {
+      name: name.trim() || "익명",
+      message: message.trim(),
+      drawing,
+      createdAt: Date.now(),
+    };
+    try {
+      const ref = await addDoc(collection(db, "guestbook"), newEntry);
+      setEntries((prev) => [{ id: ref.id, ...newEntry }, ...prev]);
+      setName("");
+      setMessage("");
+      clearCanvas();
+    } catch (err) {
+      console.error("저장 실패:", err);
+      alert("방명록 저장에 실패했어요. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -262,26 +321,6 @@ function GuestBook() {
       >
         Leave something for the next person to find.
       </p>
-
-      {/* Existing entries */}
-      <div className="mb-12 grid grid-cols-2 gap-x-12 gap-y-8">
-        {entries.map((e) => (
-          <div key={e.id} className="border-b border-[#E0DDD7] pb-6">
-            <p
-              className="text-xs text-[#8A8A8A] mb-1 uppercase tracking-widest"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              {e.name}
-            </p>
-            <p
-              className="text-sm text-[#333333] leading-relaxed"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              {e.message}
-            </p>
-          </div>
-        ))}
-      </div>
 
       {/* Drawing canvas */}
       <div className="mb-8">
@@ -319,7 +358,7 @@ function GuestBook() {
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder="Name (비워두면 익명)"
           className="col-span-1 border-b border-[#D4D1CB] bg-transparent py-2 text-sm text-[#222222] placeholder-[#B5B0A8] outline-none focus:border-[#3A7AFE] transition-colors"
           style={{ fontFamily: "var(--font-sans)" }}
         />
@@ -338,6 +377,44 @@ function GuestBook() {
       >
         Leave a mark
       </button>
+      {/* Existing entries */}
+      <div className="mb-12 grid grid-cols-2 gap-x-12 gap-y-8">
+        {entries.map((e) => (
+          <div key={e.id} className="border-b border-[#E0DDD7] pb-6">
+            {e.drawing && (
+              <img
+                src={e.drawing}
+                alt=""
+                className="w-full mb-3 bg-white border border-[#E8E5E0]"
+              />
+            )}
+            <div className="flex items-center justify-between mb-1">
+              <p
+                className="text-xs text-[#8A8A8A] uppercase tracking-widest"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {e.name}
+              </p>
+              {isAdmin && (
+                <button
+                  onClick={() => removeEntry(e.id)}
+                  className="text-[10px] text-[#B5B0A8] hover:text-[#D14343] transition-colors"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  delete
+                </button>
+              )}
+            </div>
+            <p
+              className="text-sm text-[#333333] leading-relaxed"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {e.message}
+            </p>
+          </div>
+        ))}
+      </div>
+
 
       <PageNum n="11" />
     </section>
