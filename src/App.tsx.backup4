@@ -424,10 +424,8 @@ function GuestBook() {
 // ─── Top navigation ───────────────────────────────────────────────────────────
 function TopNav({
   onNavClick,
-  onLogoClick,
 }: {
   onNavClick: (id: string) => void;
-  onLogoClick: () => void;
 }) {
   const [gradeOpen, setGradeOpen] = useState(false);
   const [actOpen, setActOpen] = useState(false);
@@ -438,13 +436,11 @@ function TopNav({
       style={{ fontFamily: "var(--font-sans)" }}
     >
       {/* Logo mark */}
-      <button
-        onClick={onLogoClick}
-        className="px-8 py-4 border-r border-[#D4D1CB] flex items-center gap-3 shrink-0 hover:opacity-60 transition-opacity"
-      >
+      <div className="px-8 py-4 border-r border-[#D4D1CB] flex items-center gap-3 shrink-0">
         <span className="text-[10px] uppercase tracking-[0.25em] text-[#8A8A8A]">EWOO</span>
         <span className="text-[10px] text-[#D4D1CB]">22nd</span>
-      </button>
+      </div>
+
       {/* 학년별 기록 */}
       <div
         className="relative"
@@ -514,52 +510,24 @@ function TopNav({
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [view, setView] = useState<"cover" | "records" | "guestbook">("cover");
+  const [bookOpen, setBookOpen] = useState(false);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // 표지 → 기록
+  // After opening, scroll to top of archive
   const handleOpen = () => {
-    setView("records");
+    setBookOpen(true);
     setTimeout(() => {
       document.getElementById("archive-top")?.scrollIntoView({ behavior: "smooth" });
     }, 400);
   };
 
-  // 기록 → 게스트북
-  const goToGuestbook = () => {
-    setView("guestbook");
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 100);
-  };
-
-  // 어디서든 → 표지
-  const goToCover = () => {
-    setView("cover");
-    window.scrollTo({ top: 0 });
-  };
-
-  // 상단 INDEX 클릭 처리
-  const handleNav = (id: string) => {
-    if (id === "guestbook") {
-      goToGuestbook();
-      return;
-    }
-    if (view !== "records") {
-      setView("records");
-      setTimeout(() => scrollTo(id), 400);
-    } else {
-      scrollTo(id);
-    }
-  };
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#DDDAD4" }}>
       {/* ── CLOSED BOOK COVER ─────────────────────────────────── */}
-      {view === "cover" && (
+      {!bookOpen && (
         <div className="min-h-screen flex items-center justify-center">
           <div
             className="relative cursor-pointer select-none"
@@ -626,11 +594,10 @@ export default function App() {
                   2024 — 2026
                 </span>
                 <span
-                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-[#C5C2BB]"
+                  className="text-[10px] tracking-widest uppercase text-[#C5C2BB]"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   Click to open
-                  <span className="text-[16px] leading-none">→</span>
                 </span>
               </div>
             </div>
@@ -639,7 +606,7 @@ export default function App() {
       )}
 
       {/* ── OPEN BOOK ─────────────────────────────────────────── */}
-      {view === "records" && (
+      {bookOpen && (
         <div
           id="archive-top"
           className="bg-[#F7F7F4]"
@@ -655,7 +622,7 @@ export default function App() {
           `}</style>
 
           {/* Sticky top nav */}
-          <TopNav onNavClick={handleNav} onLogoClick={goToCover} />
+          <TopNav onNavClick={scrollTo} />
 
           {/* Book content wrapper — centered column like a book */}
           <div className="max-w-4xl mx-auto bg-[#F7F7F4]" style={{ boxShadow: "0 0 60px rgba(0,0,0,0.08)" }}>
@@ -975,16 +942,9 @@ export default function App() {
 
             <Divider />
 
-            {/* ── 게스트북으로 이동 ──────────────────────────────── */}
-            <div className="px-16 pb-24 flex justify-end">
-              <button
-                onClick={goToGuestbook}
-                className="text-sm tracking-widest text-[#8A8A8A] hover:text-[#3A7AFE] transition-colors"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                Guest Book →
-              </button>
-            </div>
+            {/* ── GUEST BOOK ──────────────────────────────────────── */}
+            <GuestBook />
+
             {/* ── COLOPHON ────────────────────────────────────────── */}
             <footer className="px-16 py-16 border-t border-[#D4D1CB] flex justify-between items-end">
               <div>
@@ -1008,40 +968,6 @@ export default function App() {
                 다정함으로 바라본 우리 학교
               </p>
             </footer>
-          </div>
-        </div>
-      )}
-
-      {/* ── GUEST BOOK PAGE ───────────────────────────────────── */}
-      {view === "guestbook" && (
-        <div
-          className="bg-[#F7F7F4] min-h-screen"
-          style={{ animation: "fadeIn 0.6s ease both" }}
-        >
-          <style>{`
-            @keyframes fadeIn {
-              from { opacity: 0; transform: translateY(12px); }
-              to   { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
-
-          <TopNav onNavClick={handleNav} onLogoClick={goToCover} />
-
-          <GuestBook />
-
-          <div className="px-16 pb-24">
-            <button
-              onClick={() => {
-                setView("records");
-                setTimeout(() => {
-                  document.getElementById("classtime")?.scrollIntoView({ behavior: "smooth" });
-                }, 400);
-              }}
-              className="text-sm tracking-widest text-[#8A8A8A] hover:text-[#3A7AFE] transition-colors"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              ← 기록으로 돌아가기
-            </button>
           </div>
         </div>
       )}

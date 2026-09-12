@@ -1,0 +1,15 @@
+              <div className="mt-auto flex items-end justify-between">
+                <span
+                  className="text-xs text-[#B5B0A8]"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  2024 — 2026
+                </span>
+                <span
+                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-[#C5C2BB]"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  Click to open
+                  <span className="text-[16px] leading-none">→</span>
+                </span>
+              </div>
