@@ -1,15 +1,113 @@
-              <div className="mt-auto flex items-end justify-between">
+
+      {/* ── PROLOGUE PAGE ─────────────────────────────────────── */}
+      {view === "prologue" && (
+        <div
+          className="bg-[#F7F7F4] min-h-screen"
+          style={{ animation: "fadeIn 0.6s ease both" }}
+        >
+          <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(12px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
+
+          <TopNav onNavClick={handleNav} onLogoClick={goToCover} />
+
+          <div className="max-w-4xl mx-auto bg-[#F7F7F4]" style={{ boxShadow: "0 0 60px rgba(0,0,0,0.08)" }}>
+
+            {/* ── PROLOGUE ──────────────────────────────────────── */}
+            <section className="px-16 py-24">
+              <div className="mb-16">
                 <span
-                  className="text-xs text-[#B5B0A8]"
+                  className="text-[10px] uppercase tracking-[0.3em] text-[#8A8A8A]"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  2024 — 2026
+                  Prologue
                 </span>
-                <span
-                  className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-[#C5C2BB]"
+                <h1
+                  className="text-5xl mt-3 text-[#222222] leading-tight"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  EWOO<br />MIDDLE SCHOOL
+                </h1>
+                <p
+                  className="text-sm text-[#8A8A8A] mt-2 tracking-widest"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  Click to open
-                  <span className="text-[16px] leading-none">→</span>
-                </span>
+                  22nd ARCHIVE · 2024 — 2026
+                </p>
               </div>
+
+              {/* Prologue text area */}
+              <div className="grid grid-cols-2 gap-16">
+                <div>
+                  <p
+                    className="text-[11px] uppercase tracking-[0.2em] text-[#8A8A8A] mb-5"
+                    style={{ fontFamily: "var(--font-sans)" }}
+                  >
+                    다정함으로 바라본 우리 학교
+                  </p>
+                  <div
+                    className="text-sm text-[#444444] leading-[1.9] space-y-5"
+                    style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
+                  >
+                    <p>
+                      이 아카이브는 우리 22회 졸업생들이 함께 보낸 3년을 기록한 공간입니다.
+                    </p>
+                    <p>
+                      거창한 이야기가 아니어도 괜찮습니다. 복도에서 나눈 짧은 대화,
+                      창밖으로 보이던 운동장, 수업이 끝나고 함께했던 시간들 —
+                      그 작고 평범한 순간들이 사실 가장 오래 기억될 것 같아서요.
+                    </p>
+                    <p>
+                      {/* Creator's personal note will go here */}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-8">
+                  <PhotoSlot caption="우리 학교, 어느 날" />
+                  <IllustrationSlot label="school building" />
+                </div>
+              </div>
+              <PageNum n="01" />
+            </section>
+
+            <Divider />
+
+            {/* ── 학년별 기록 ──────────────────────────────────────── */}
+            <section className="px-16 py-12">
+              <div className="mb-16">
+                <span
+                  className="text-[11px] uppercase tracking-[0.25em] text-[#8A8A8A]"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  — I
+                </span>
+                <h2
+                  className="text-5xl mt-2 text-[#222222]"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  학년별 기록
+                </h2>
+                <p
+                  className="text-xs text-[#8A8A8A] mt-1 tracking-widest uppercase"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  Grade Records
+                </p>
+              </div>
+            </section>
+            <div className="px-16 pb-24 flex justify-end">
+              <button
+                onClick={goToRecords}
+                className="flex items-center gap-2 text-sm tracking-widest text-[#8A8A8A] hover:text-[#3A7AFE] transition-colors"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                기록 보기
+                <span className="text-[16px] leading-none">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
