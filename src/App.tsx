@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { db } from "./firebase";
+import { db, auth, loginWithGoogle, logout, onAuthStateChanged } from "./firebase";
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 
 // ─── Photo placeholder component ─────────────────────────────────────────────
@@ -269,9 +269,30 @@ function GuestBook() {
   };
 
 
-  const isAdmin =
+  const isAdminUrl =
     new URLSearchParams(window.location.search).get("admin") === "diesukk2i";
 
+  const ADMIN_EMAIL = "hara201109@gmail.com";
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setAdminEmail(user?.email ?? null);
+    });
+    return () => unsub();
+  }, []);
+
+  const isAdmin = isAdminUrl && adminEmail === ADMIN_EMAIL;
+
+  const handleLogin = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      console.error("로그인 실패:", err);
+      alert("로그인에 실패했어요.");
+    }
+  };
+  
   const removeEntry = async (id: string | number) => {
     if (!isAdmin) return;
     if (!confirm("이 방명록을 삭제할까요?")) return;
@@ -377,7 +398,33 @@ function GuestBook() {
       >
         Leave a mark
       </button>
-      {/* Existing entries */}
+      {isAdminUrl && (
+        <div
+          className="mt-6 mb-10 text-[11px] text-[#8A8A8A]"
+          style={{ fontFamily: "var(--font-sans)" }}
+        >
+          {adminEmail ? (
+            <>
+              {isAdmin ? "관리자로 로그인됨" : "이 계정은 관리자가 아니에요"}
+              {" · "}
+              <button
+                onClick={logout}
+                className="underline underline-offset-2 hover:text-[#3A7AFE] transition-colors"
+              >
+                logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="underline underline-offset-2 hover:text-[#3A7AFE] transition-colors"
+            >
+              admin login
+            </button>
+          )}
+        </div>
+      )}
+            {/* Existing entries */}
       <div className="mb-12 grid grid-cols-2 gap-x-12 gap-y-8">
         {entries.map((e) => (
           <div key={e.id} className="border-b border-[#E0DDD7] pb-6">
