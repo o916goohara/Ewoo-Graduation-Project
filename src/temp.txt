@@ -1,27 +1,9 @@
-      {isAdminUrl && (
-        <div
-          className="mt-6 mb-10 text-[11px] text-[#8A8A8A]"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          {adminEmail ? (
-            <>
-              {isAdmin ? "관리자로 로그인됨" : "이 계정은 관리자가 아니에요"}
-              {" · "}
-              <button
-                onClick={logout}
-                className="underline underline-offset-2 hover:text-[#3A7AFE] transition-colors"
-              >
-                logout
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={handleLogin}
-              className="underline underline-offset-2 hover:text-[#3A7AFE] transition-colors"
-            >
-              admin login
-            </button>
-          )}
-        </div>
-      )}
-      
+                <div className="mt-8">
+                  <InterviewBlock
+                    question="공감캠프에서 가장 기억에 남는 순간은 무엇인가요?"
+                    answers={[
+                      "친구들과 같이 했던 춤 추기!",
+                      "밤에 같은 방 친구들끼리 밤새 수다떤게 가장 재밌었어요.",
+                    ]}
+                  />
+                </div>

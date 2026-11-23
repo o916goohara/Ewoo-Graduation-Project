@@ -53,13 +53,44 @@ function PhotoSlot({
   );
 }
 
+// ─── Event story (photo + long text) ─────────────────────────────────────────
+function EventStory({
+  paragraphs,
+  src = "",
+  caption = "",
+  tall = false,
+}: {
+  paragraphs: string[];
+  src?: string;
+  caption?: string;
+  tall?: boolean;
+}) {
+  return (
+    <div className="grid grid-cols-5 gap-10 mb-10 items-start">
+      <div className="col-span-2 [&_figure]:block [&_figure]:w-full">
+        <PhotoSlot src={src} caption={caption} tall={tall} />
+      </div>
+      <div
+        className="col-span-3 text-sm text-[#444444] leading-[1.9] space-y-5 break-keep"
+        style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
+      >
+        {paragraphs.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Interview block ──────────────────────────────────────────────────────────
 function InterviewBlock({
   question,
   answer = "",
+  answers = [],
 }: {
   question: string;
   answer?: string;
+  answers?: string[];
 }) {
   return (
     <div className="border-l-2 border-[#D4D1CB] pl-5 py-1">
@@ -75,7 +106,19 @@ function InterviewBlock({
       >
         {question}
       </p>
-      {answer ? (
+      {answers.length > 0 ? (
+        <div className="grid grid-cols-2 gap-8">
+          {answers.map((a, i) => (
+            <p
+              key={i}
+              className="text-sm text-[#444444] leading-relaxed"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {a}
+            </p>
+          ))}
+        </div>
+      ) : answer ? (
         <p
           className="text-sm text-[#444444] leading-relaxed"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -88,7 +131,6 @@ function InterviewBlock({
     </div>
   );
 }
-
 // ─── Illustration slot ────────────────────────────────────────────────────────
 function IllustrationSlot({ label }: { label?: string }) {
   return (
@@ -744,19 +786,17 @@ export default function App() {
                     다정함으로 바라본 우리 학교
                   </p>
                   <div
-                    className="text-sm text-[#444444] leading-[1.9] space-y-5"
+                    className="text-sm text-[#444444] leading-[1.9] space-y-5 break-keep"
                     style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
                   >
                     <p>
-                      이 아카이브는 우리 22회 졸업생들이 함께 보낸 3년을 기록한 공간입니다.
+                      이우중학교 22기로 보낸 3년을 돌아보면 특별한 행사보다 친구들과 함께했던 평범한 순간들이 먼저 떠오른다. 같은 공간에서 웃고 떠들던 시간, 서로 다른 생각을 맞춰 가던 과정, 힘든 활동이 끝난 뒤 함께 느꼈던 후련함까지. 그때는 당연하게 여겼던 일들이 시간이 지나면서 조금씩 다르게 보였다.
                     </p>
                     <p>
-                      거창한 이야기가 아니어도 괜찮습니다. 복도에서 나눈 짧은 대화,
-                      창밖으로 보이던 운동장, 수업이 끝나고 함께했던 시간들 —
-                      그 작고 평범한 순간들이 사실 가장 오래 기억될 것 같아서요.
+                      우리의 3년이 늘 즐겁기만 했던 것은 아니다. 바쁘고 지치는 날도 있었고, 함께 무언가를 준비하면서 부딪히기도 했다. 그래도 그 사이에는 서로의 이야기를 들어 주고, 다른 생각을 이해하려는 노력과 작은 배려가 있었다. 나는 그런 모습들이 모여 우리 기수의 다정함을 만들었다고 생각한다.
                     </p>
                     <p>
-                      {/* Creator's personal note will go here */}
+                      이 기록에는 우리가 무엇을 했는지만이 아니라 그 시간을 어떻게 함께 보냈는지도 남기고 싶었다. 언젠가 이 페이지를 다시 펼쳤을 때, 각자의 기억 속에 남아 있는 3년과 그 안에서 함께했던 친구들을 편하게 떠올릴 수 있었으면 한다.
                     </p>
                   </div>
                 </div>
@@ -834,19 +874,26 @@ export default function App() {
               <div className="mb-16">
                 <EventHeading
                   title="공감캠프"
-                  desc="서로를 처음 알아가는 시간. 낯설고 어색했지만, 그래서 더 기억에 남는."
+                  desc="처음으로 간 캠프"
                 />
-                <div className="grid grid-cols-3 gap-6 mb-8">
-                  <PhotoSlot rotate={-1} caption="공감캠프 첫째 날" />
-                  <PhotoSlot rotate={0.5} caption="조별 활동" />
-                  <PhotoSlot rotate={1} caption="" />
-                </div>
-                <div className="grid grid-cols-2 gap-12 mt-8">
-                  <InterviewBlock question="가장 기억에 남는 순간은?" />
-                  <InterviewBlock question="그때 어떤 기분이었어?" />
+                <EventStory
+                  caption="공감캠프"
+                  paragraphs={[
+                    "1학년 때 우리는 서울시립대학교 UOS 강촌유스호스텔로 공감캠프를 떠났다. 아직 서로를 알아 가던 시기였고, 처음으로 팀을 이루어 여러 활동을 함께했다. 각자 다른 생각과 방식으로 움직이던 친구들이 하나의 팀이 되어 호흡을 맞춰 보았다. 서로의 의견을 듣고 함께 움직이면서 평소에는 잘 몰랐던 친구들의 모습도 조금씩 알게 된 순간이었던 것 같다.",
+                    "전체가 둥글게 둘러앉아 부모님들의 편지를 보고 듣는 시간도 있었다. 친구들과 함께 부모님의 이야기를 듣는 것은 평소 학교생활과는 다른 경험이었고, 많은 친구들이 울면서 서로의 마음을 조금 더 이해하게 되었다. 그 후 반별로 마음을 나누는 활동도 진행했다.",
+                    "정해진 활동이 끝난 뒤에는 숙소에서 친구들과 이야기를 나누며 시간을 보냈다. 같은 방을 쓰고 함께 놀면서 조금씩 어색함이 줄어들었다. 공감캠프는 우리가 처음으로 함께 호흡을 맞춰 본 활동이자 서로를 알아 가고 가까워지는 과정이었다.",
+                  ]}
+                />
+                <div className="mt-8">
+                  <InterviewBlock
+                    question="공감캠프에서 가장 기억에 남는 순간은 무엇인가요?"
+                    answers={[
+                      "친구들과 같이 했던 춤 추기!",
+                      "밤에 같은 방 친구들끼리 밤새 수다떤게 가장 재밌었어요.",
+                    ]}
+                  />
                 </div>
               </div>
-
               <div className="w-12 border-t border-[#D4D1CB] my-12" />
 
               {/* 역사캠프 */}
