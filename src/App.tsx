@@ -107,14 +107,14 @@ function InterviewBlock({
         {question}
       </p>
       {answers.length > 0 ? (
-        <div className="grid grid-cols-2 gap-8">
+        <div className="flex flex-col gap-2">
           {answers.map((a, i) => (
             <p
               key={i}
               className="text-sm text-[#444444] leading-relaxed"
               style={{ fontFamily: "var(--font-sans)" }}
             >
-              {a}
+              - {a}
             </p>
           ))}
         </div>
@@ -576,7 +576,6 @@ function TopNav({
             {[
               { label: "체육대회", id: "sports" },
               { label: "축제", id: "festival" },
-              { label: "학년시간", id: "classtime" },
             ].map((item) => (
               <button
                 key={item.id}
@@ -802,7 +801,6 @@ export default function App() {
                 </div>
                 <div className="flex flex-col gap-8">
                   <PhotoSlot caption="우리 학교, 어느 날" />
-                  <IllustrationSlot label="school building" />
                 </div>
               </div>
               <PageNum n="01" />
@@ -900,24 +898,26 @@ export default function App() {
               <div>
                 <EventHeading
                   title="역사캠프"
-                  desc="교실 밖에서 배운 것들. 우리가 발로 걷고, 눈으로 본 역사."
+                  desc="공주한옥마을에서 보낸 캠프"
                 />
-                <div className="grid grid-cols-2 gap-8 mb-8">
-                  <div className="flex flex-col gap-6">
-                    <PhotoSlot tall caption="역사캠프 현장" />
-                  </div>
-                  <div className="pt-8">
-                    <p
-                      className="text-sm text-[#444444] leading-[1.9] mb-8"
-                      style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
-                    >
-                      {/* Short description of the history camp experience goes here */}
-                    </p>
-                    <InterviewBlock question="다시 돌아간다면 기억하고 싶은 순간은?" />
-                    <div className="mt-8">
-                      <IllustrationSlot label="지도 또는 장소 스케치" />
-                    </div>
-                  </div>
+                <EventStory
+                  tall
+                  caption="역사캠프"
+                  paragraphs={[
+                    "1학년 역사캠프에서는 공주한옥마을에 머물며 공주 지역의 역사 유적을 방문했다. 무령왕릉을 비롯한 여러 장소를 둘러보고, 국립공주박물관에서는 백제의 역사와 유물을 살펴보았다. 특히 무령왕릉에서 발견된 상상의 동물인 진묘수와 화려한 금제 유물도 볼 수 있었다.",
+                    "산길을 따라 걸어간 뒤 배를 타고 이동했던 활동도 있었다. 많은 활동을 했던 것 같은데, 그 모든 것을 다 담을 수 없고 기억도 명확하게 나지 않는 것 같아 아쉽다. 그래도 친구들과 함께 걸으며 여러 장소를 둘러보았던 시간은 기억에 남아 있다.",
+                    "저녁에는 숙소에서 자유롭게 시간을 보냈다. 중간중간 친구들과 숙소에서 무궁화꽃이 피었습니다나 달리기 시합을 하면서 많은 추억이 생겼던 것 같다. 특별한 일이 없어도 친구들과 함께 놀던 시간이 기억에 남는다는 친구들도 많았다.",
+                    "역사캠프는 단순히 역사를 보고 배우는 캠프라고 생각했는데, 다시 돌아보니 우리가 정말 많은 것을 함께 경험했던 시간이라는 생각이 들었다.",
+                  ]}
+                />
+                <div className="mt-8">
+                  <InterviewBlock
+                    question="역사캠프에서 가장 기억에 남는 순간은 무엇인가요?"
+                    answers={[
+                      "숙소에서 했던 술래잡기가 제일 기억에 남아요",
+                      "편의점 가려다 몰래 들킨거요",
+                    ]}
+                  />
                 </div>
               </div>
               <PageNum n="02" />
@@ -933,54 +933,50 @@ export default function App() {
               <div className="mb-16">
                 <EventHeading
                   title="명상캠프"
-                  desc="멈추고, 바라보는 시간. 잠깐 조용해진 우리들."
+                  desc="정약용펀그라운드에서 보낸 캠프"
                 />
-                <div className="grid grid-cols-3 gap-6 mb-8">
-                  <PhotoSlot rotate={-0.5} caption="명상 시간" />
-                  <PhotoSlot rotate={1} caption="" />
-                  <PhotoSlot rotate={-1} caption="자연 속에서" />
-                </div>
+                <EventStory
+                  caption="명상캠프"
+                  paragraphs={[
+                    "2학년 때 우리는 정약용펀그라운드 유스호스텔에서 명상캠프를 진행했다. 색을 통해 자신이 어떤 사람인지 탐구하는 시간을 가지기도 하고, 걷기 명상과 왁자지껄 명상도 했다. 평소에는 깊이 생각하지 않았던 자신의 모습이나 성향을 돌아보는 활동이었다. 자신에 대해 알아보는 동시에 같은 활동을 하는 친구들의 서로 다른 모습도 볼 수 있었다.",
+                    "활동이 끝난 뒤에는 반끼리 시간을 보내기도 하고, 숙소에서 친구들과 함께 시간을 보내기도 했다. 학년 친구들끼리 음악을 짧게 듣고 맞히는 게임이나 공연을 하며 함께 놀던 시간이 가장 기억에 남는다는 친구들도 있었다. 명상 활동만큼이나 친구들과 편하게 웃고 어울렸던 시간도 캠프의 한 부분이었다.",
+                  ]}
+                />
                 <div className="mt-8">
-                  <InterviewBlock question="3년 동안 가장 많이 웃었던 순간은?" />
+                  <InterviewBlock
+                    question="명상캠프에서 기억에 남는 활동이나 경험은 무엇이었나요?"
+                    answers={[
+                      "몰래 자판기 이용하다 단체로 걸려서 반성문 쓴게 기억에 남습니다.",
+                      "친구들이랑 네잎클로버 20개 찾아서 친구들에게 나누어 준 것!",
+                    ]}
+                  />
                 </div>
               </div>
-
               <div className="w-12 border-t border-[#D4D1CB] my-12" />
 
               {/* 나바시 */}
               <div>
                 <EventHeading
                   title="나바시"
-                  desc="나를 바라보는 시간 — 패션, 움직임, 창작, 창업, 내면 탐구, 사회 탐구."
+                  desc="나를 바라보는 시간"
                 />
-                <div className="grid grid-cols-2 gap-12">
-                  <div>
-                    <p
-                      className="text-sm text-[#444444] leading-[1.9] mb-6"
-                      style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
-                    >
-                      나바시는 학생들이 스스로 궁금한 것을 탐구하고,
-                      잘 몰랐던 길을 걸어본 시간이었습니다.
-                      정답을 찾는 것이 아니라, 자신이 무엇에 끌리는지를
-                      조금씩 알아가는 과정이었죠.
-                    </p>
-                    <div className="grid grid-cols-3 gap-3 mb-6">
-                      {["패션", "움직임", "창작", "창업", "내면", "사회"].map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] tracking-widest uppercase text-[#8A8A8A] border border-[#D4D1CB] px-2 py-1 text-center"
-                          style={{ fontFamily: "var(--font-sans)" }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <InterviewBlock question="나바시에서 발견한 것이 있다면?" />
-                  </div>
-                  <div className="flex flex-col gap-6">
-                    <PhotoSlot tall caption="나바시 발표 현장" />
-                    <IllustrationSlot label="학생 노트 스케치" />
-                  </div>
+                <EventStory
+                  tall
+                  caption="나바시"
+                  paragraphs={[
+                    "2학년 나바시는 '나를 바라보는 시간'의 줄임말이다. 우리는 자신의 관심사나 궁금했던 것을 주제로 정하고 학기 동안 탐구했다. 패션, 움직임, 창작, 창업, 내면 탐색, 사회 탐색 등 다양한 주제가 있었고, 탐구한 결과를 다른 사람들과 공유하는 시간도 가졌다.",
+                    "각자 관심 있는 분야를 알아보는 과정이었지만, 친구들과 함께하는 일이 많아서인지 의견이 달라 부딪히거나 계획대로 진행되지 않는 경우도 있었다. 함께 결정하고 준비하는 과정에서 서로의 생각을 조율해야 했고, 혼자 하는 활동과는 다른 어려움이 있었다. 생각이 다를 때에도 서로의 의견을 듣고 하나씩 맞춰 가는 과정이 필요했다.",
+                    "탐구를 마친 뒤에는 각자가 어떤 과정을 거쳤는지 돌아볼 수 있었다. 새로운 관심사를 발견하거나 자신의 성향을 알아 가기도 했고, 친구들과 협력하는 경험을 얻기도 했다. 같은 나바시였지만 각자에게 남은 경험은 달랐고, 그 과정에는 함께 고민하고 도전했던 친구들도 있었다.",
+                  ]}
+                />
+                <div className="mt-8">
+                  <InterviewBlock
+                    question="나바시 과정에서 얻은 것은 무엇인가요?"
+                    answers={[
+                      "실제 전문가의 의견을 들어보며 쉬운 일은 없다는걸 알게되었다.",
+                      "내가 혼자 하는 것보다는 같이 하는 것이 훨씬 더 좋다는 걸 알게 되었던 것 같다.",
+                    ]}
+                  />
                 </div>
               </div>
               <PageNum n="04" />
@@ -996,24 +992,25 @@ export default function App() {
               <div>
                 <EventHeading
                   title="공동체활동"
-                  desc="마지막 해, 우리가 함께 만든 시간들."
+                  desc="3학년 때 한 프로젝트"
                 />
-                <div className="grid grid-cols-2 gap-10 mb-10">
-                  <PhotoSlot tall caption="공동체 활동" />
-                  <PhotoSlot tall caption="" />
-                </div>
-                <div className="grid grid-cols-2 gap-12 mt-4">
-                  <InterviewBlock question="3학년이 되어 달라진 것이 있다면?" />
-                  <InterviewBlock question="졸업하고 나서도 기억하고 싶은 게 있어?" />
-                </div>
-                <div className="mt-12 border border-dashed border-[#D4D1CB] p-8">
-                  <p
-                    className="text-[11px] uppercase tracking-widest text-[#B5B0A8] mb-3"
-                    style={{ fontFamily: "var(--font-sans)" }}
-                  >
-                    Handwritten note
-                  </p>
-                  <div className="h-20" />
+                <EventStory
+                  tall
+                  caption="공동체활동"
+                  paragraphs={[
+                    "3학년 공동체활동은 학교 밖으로 나가 직접 사회를 탐구하고 활동하는 프로젝트였다. 각자의 주제에 따라 자료를 조사하고, 관련된 장소를 방문하거나 프로그램을 기획했다. 조사한 내용을 바탕으로 실제 활동을 진행하면서 교실 안에서 정보를 알아보는 것과는 다른 경험을 했다.",
+                    "프로젝트를 준비하는 과정에는 어려움도 있었다. 필요한 자료를 만들고 활동 내용을 구상해야 했으며, 팀원들과 의견을 맞추는 시간도 필요했다. 직접 현장에 나가 보니 조사했던 내용과 실제 상황이 다르게 느껴지기도 했다. 서로 다른 관점을 이해하고 조율하는 과정이 이어졌고, 각자의 생각을 하나의 활동으로 만들어 가기 위해 함께 고민했다.",
+                    "마지막에는 각자의 프로젝트를 공유하는 시간을 가졌다. 주제도 활동 방식도 달랐지만, 모두 직접 계획하고 실행하는 과정을 거쳤다. 각자의 결과뿐 아니라 그 과정에서 친구들과 함께 노력했던 시간도 돌아볼 수 있었다.",
+                  ]}
+                />
+                <div className="mt-8">
+                  <InterviewBlock
+                    question="공동체활동에서 가장 기억에 남는 순간은 무엇이었나요?"
+                    answers={[
+                      "발표회 전날 9시 넘어서까지 외부활동하며 회의한 게 기억에 남는다.",
+                      "마지막 공유회 때 서로가 얼마나 배웠고 성장했는지 알게된 시간인듯 하다.",
+                    ]}
+                  />
                 </div>
               </div>
               <PageNum n="06" />
@@ -1048,21 +1045,22 @@ export default function App() {
             {/* 체육대회 */}
             <section id="sports" className="px-16 pb-20">
               <ChapterHeading number="II — 01" korean="체육대회" english="Sports Day" />
-              <div className="grid grid-cols-3 gap-6 mb-10">
-                <PhotoSlot rotate={-1} caption="응원 현장" />
-                <PhotoSlot rotate={0.5} caption="달리기" />
-                <PhotoSlot rotate={-0.5} caption="단체전" />
-              </div>
-              <div className="grid grid-cols-2 gap-12">
-                <div>
-                  <p
-                    className="text-sm text-[#444444] leading-[1.9]"
-                    style={{ fontFamily: "var(--font-sans)", fontWeight: 300 }}
-                  >
-                    {/* Description of sports day goes here */}
-                  </p>
-                </div>
-                <InterviewBlock question="체육대회에서 가장 기억에 남는 장면은?" />
+              <EventStory
+                caption="체육대회"
+                paragraphs={[
+                  "체육대회는 평소 교실에서 지내던 모습과는 다르게 고등학생들까지 함께 어울릴 수 있는 시간이었다. 직접 경기에 참여하는 친구도 있었고, 경기를 지켜보며 응원하는 친구도 있었다. 같은 경기를 보면서 함께 반응하고 결과를 기다리는 동안 평소보다 활기찬 분위기가 이어졌다.",
+                  "경기에 참여할 때는 친구들과 호흡을 맞추는 것이 중요했다. 서로 힘을 모아 경기를 진행했고, 좋은 결과가 나오면 함께 기뻐했다. 특히 축구 경기에서는 중학생과 고등학생이 함께 응원하기도 했다. 경기에 직접 참여하지 않더라도 친구들의 경기를 지켜보고 응원하면서 체육대회를 즐길 수 있었다.",
+                  "체육대회에서 기억에 남는 것은 경기 결과뿐만이 아니었다. 친구들과 함께 뛰고 응원하며 같은 순간을 즐겼다는 점도 컸다. 서로 다른 자리에서 참여했지만 함께 기뻐하고 응원하는 모습에서 평소와는 다른 학교의 분위기를 느낄 수 있었다.",
+                ]}
+              />
+              <div className="mt-8">
+                <InterviewBlock
+                  question="체육대회에서 가장 기억에 남는 순간은 무엇인가요?"
+                  answers={[
+                    "이번 체육대회!! 중1부터 고3까지 다 함께? 한 추억이기에 뜻깊고 특히 새콤달콤때가 가장 기억에 남는다 그리고 역시 축구경기는 중,고 가 다 같이 응원하는 모습이 정말 우리 학교의 가치인 더불어 사는 삶과 연결이 잘 된다고 느꼈고 재밌었다!!",
+                    "같이 단합하여 진행하는 것/뭔가 한 마음 한 몸이 되는 느낌이 신기하다",
+                  ]}
+                />
               </div>
               <PageNum n="07" />
             </section>
@@ -1072,35 +1070,25 @@ export default function App() {
             {/* 축제 */}
             <section id="festival" className="px-16 pb-20">
               <ChapterHeading number="II — 02" korean="축제" english="School Festival" />
-              <div className="grid grid-cols-2 gap-8 mb-10">
-                <PhotoSlot tall caption="무대 위에서" />
-                <div className="flex flex-col gap-6">
-                  <PhotoSlot caption="부스 활동" />
-                  <PhotoSlot caption="관객석" />
-                </div>
+              <EventStory
+                tall
+                caption="축제"
+                paragraphs={[
+                  "축제는 친구들이 직접 준비한 부스와 공연을 함께 즐기는 날이다. 그중 가장 특별한 순간을 뽑자면 대부분 만들자구나를 떠올릴 것 같다. 만들자구나는 반별로 축제준비위원회에서 제시한 주제를 바탕으로 이야기를 창작하거나 재구성해 10~15분 정도의 연극을 만드는 활동이다. 하나의 작품을 완성하기 위해 반 친구들이 함께 의견을 나누고, 한 달이 넘는 기간 동안 모두가 열심히 준비한다.",
+                  "1학년 때 어떻게 해야 할지 감이 잡히지 않아 치고받고 하던 때부터 소품까지 알차게 준비했던 3학년 때까지, 우리가 성장한 모습이 보여서 준비하는 내내 신기하기도 했다. 의견이 달라 부딪히기도 했지만 결국 하나의 작품을 완성하기 위해 함께 노력했다는 점도 기억에 남는다.",
+                  "축제에는 맛있는 음식 부스도 있고, 재미있는 활동과 마무리를 장식하는 멋진 공연까지 있어 모두가 가장 즐길 수 있는 날인 것 같다. 친구들이 준비한 것을 서로 구경하고 즐기며, 그동안의 노력을 함께 나눌 수 있는 시간이기도 했다.",
+                ]}
+              />
+              <div className="mt-8">
+                <InterviewBlock
+                  question="축제나 체육대회 같은 활동에서 가장 좋았던 것 하나만 뽑자면 무엇이고, 그 이유는 뭔가요?"
+                  answers={[
+                    "만들자구나를 보면서 우리가 3년동안 얼마나 많이 고생했고, 또 노력해 왔는지를 보는 시간이었다.",
+                    "축제날 저녁에 밴드 공연할 때, 가장 신나고 벅차올랐어서 가장 좋았다.",
+                  ]}
+                />
               </div>
-              <InterviewBlock question="축제 때 가장 많이 웃었던 순간은?" />
               <PageNum n="08" />
-            </section>
-
-            <div className="w-12 border-t border-[#D4D1CB] mx-16 my-4" />
-
-            {/* 학년시간 */}
-            <section id="classtime" className="px-16 pb-20">
-              <ChapterHeading number="II — 03" korean="학년시간" english="Grade Time" />
-              <div className="grid grid-cols-3 gap-6 mb-10">
-                <PhotoSlot rotate={1} caption="" />
-                <PhotoSlot rotate={-0.5} caption="교실 풍경" />
-                <div className="flex flex-col gap-4">
-                  <IllustrationSlot label="교실" />
-                  <IllustrationSlot label="칠판" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12">
-                <InterviewBlock question="학년시간에 무엇을 했어?" />
-                <InterviewBlock question="가장 좋아했던 순간은?" />
-              </div>
-              <PageNum n="09" />
             </section>
 
             <Divider />
@@ -1164,7 +1152,7 @@ export default function App() {
               onClick={() => {
                 setView("records");
                 setTimeout(() => {
-                  document.getElementById("classtime")?.scrollIntoView({ behavior: "smooth" });
+                  document.getElementById("festival")?.scrollIntoView({ behavior: "smooth" });
                 }, 400);
               }}
               className="text-sm tracking-widest text-[#8A8A8A] hover:text-[#3A7AFE] transition-colors"
